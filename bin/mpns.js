@@ -6,8 +6,8 @@ const argv = yargs.argv;
 const configPath = argv.configPath;
 console.log(configPath);
 
-const MakeUpPrivateNPMServer = require('../index');
+const NPNS = require('../index');
 
-console.log(MakeUpPrivateNPMServer);
+console.log(NPNS);
 
-new MakeUpPrivateNPMServer({configPath: configPath});
+new NPNS({configPath: configPath});

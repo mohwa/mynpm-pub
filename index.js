@@ -14,13 +14,13 @@ require('shelljs/global');
 //rm('-rf', '/Users/sgjeon/.local/share/verdaccio/storage/*');
 
 
-class MakeUpPrivateNPMServer{
+class NPNS{
 
     constructor({
-        configPath = '',
+        configPath = ''
     } = {}){
         this.configPath = configPath;
-    },
+    }
     start(){
 
         const configPath = this.configPath;
@@ -36,7 +36,7 @@ class MakeUpPrivateNPMServer{
 
         //const npmList = JSON.parse(exec('npm ls --json', {silent:true}).stdout);
         //
-        //_npmPublish(_createDependencyList(npmList.dependencies));
+        //_publish(_createDependencyList(npmList.dependencies));
     }
 }
 
@@ -67,7 +67,7 @@ function _createDependencyList(dependencies = {}, _dependencies = {}){
  * @param dependencies
  * @constructor
  */
-function _npmPublish(dependencies = {}){
+function _publish(dependencies = {}){
 
     _.map(dependencies, (v, k) => {
 
@@ -89,4 +89,4 @@ function _npmPublish(dependencies = {}){
     });
 }
 
-module.exports = MakeUpPrivateNPMServer;
+module.exports = NPNS;
