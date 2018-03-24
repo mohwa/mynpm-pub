@@ -14,7 +14,7 @@ require('shelljs/global');
 //rm('-rf', '/Users/sgjeon/.local/share/verdaccio/storage/*');
 
 
-class NPNS{
+class MPNS{
 
     constructor({
         configPath = ''
@@ -89,4 +89,4 @@ function _publish(dependencies = {}){
     });
 }
 
-module.exports = NPNS;
+module.exports = MPNS;

@@ -22,7 +22,7 @@
     "yaml-to-json": "^0.3.0"
   },
   "bin": {
-    "mpns": "./bin/mpns"
+    "mpns": "./bin/cli"
   },
   "license": "MIT",
   "engines": {
