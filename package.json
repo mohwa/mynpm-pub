@@ -1,0 +1,31 @@
+{
+  "name": "makeup-private-npm-server",
+  "version": "0.0.0",
+  "description": "makeup-private-npm-server",
+  "keywords": [
+    "private",
+    "npm",
+    "server",
+    "verdaccio"
+  ],
+  "homepage": "https://github.com/mohwa/makeup-private-npm-server",
+  "author": {
+    "name": "mohwa",
+    "email": "yanione2@gmail.com",
+    "url": "http://bxuip.bwg.co.kr"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "shelljs": "^0.8.1",
+    "lodash": "^4.14.1",
+    "yargs": "^11.0.0",
+    "yaml-to-json": "^0.3.0"
+  },
+  "bin": {
+    "makeup": "./bin/makeup"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=8.x"
+  }
+}
