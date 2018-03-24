@@ -1,6 +1,6 @@
 {
   "name": "makeup-private-npm-server",
-  "version": "0.0.0",
+  "version": "0.0.6",
   "description": "makeup-private-npm-server",
   "keywords": [
     "private",
@@ -19,10 +19,13 @@
     "shelljs": "^0.8.1",
     "lodash": "^4.14.1",
     "yargs": "^11.0.0",
-    "yaml-to-json": "^0.3.0"
+    "js-yaml": "^3.11.0"
   },
   "bin": {
-    "mpns": "./bin/cli"
+    "mpns": "./bin/cli.js"
+  },
+  "scripts": {
+    "preinstall": "./scripts/install.js"
   },
   "license": "MIT",
   "engines": {

@@ -4,47 +4,62 @@
 
 const fs = require('fs');
 const _ = require('lodash');
-const yaml2json = require('yaml-to-json');
+const yaml = require('js-yaml');
 
 require('shelljs/global');
 
-//const publicUri = 'http://registry.npmjs.org';
-//const privateUri = 'http://192.168.43.197:4873';
-
-//rm('-rf', '/Users/sgjeon/.local/share/verdaccio/storage/*');
-
-
+/**
+ * MPNS 클래스
+ */
 class MPNS{
 
     constructor({
-        configPath = ''
+        config = '',
+        force = false
     } = {}){
-        this.configPath = configPath;
+        this.configPath = config;
+        this.storage = '';
+        this.npmjsUrl = '';
+        this.proxy = '';
+        this.force = force;
     }
     start(){
 
         const configPath = this.configPath;
 
-        if (_.isEmpty(configPath)) throw new Error('');
-        if (!fs.existsSync(configPath)) throw new Error('');
+        if (_.isEmpty(configPath)) throw new Error('not found configPath property');
+        if (!fs.existsSync(configPath)) throw new Error('not exists configFile');
 
-        //const config = require(configFilePath);
-        const config = yaml2json(require(configPath));
+        let config = yaml.safeLoadAll(fs.readFileSync(configPath, 'utf-8'));
 
-        console.log(config);
+        if (!_.isArray(config)) throw new Error('not import configFile Info');
+
+        config = config[0];
+
+        this.storage = config.storage;
+        this.npmjsUrl = config.uplinks.npmjs.url;
+        this.proxy = config.packages['**'].proxy;
+
+        if (_.isEmpty(this.storage)) throw new Error('not found storage property');
+        if (_.isEmpty(this.npmjsUrl)) throw new Error('not found npmjs.url property');
+        if (_.isEmpty(this.proxy)) throw new Error('not found proxy property');
 
 
-        //const npmList = JSON.parse(exec('npm ls --json', {silent:true}).stdout);
-        //
-        //_publish(_createDependencyList(npmList.dependencies));
+        const npmList = JSON.parse(exec('npm ls --json', {silent:true}).stdout);
+
+        _publish.call(this, _createDependencyList(npmList.dependencies));
     }
 }
 
 
 /**
  *
+ * 현재 디렉토리에 있는 의존성 NPM 패키지들을 모두 가져온다.
+ *
  * @param dependencies
+ * @param _dependencies
  * @returns {{}}
+ * @private
  */
 function _createDependencyList(dependencies = {}, _dependencies = {}){
 
@@ -63,6 +78,7 @@ function _createDependencyList(dependencies = {}, _dependencies = {}){
 }
 
 /**
+ * 공용 NPM 서버에서 가져온 tarball 파일을 사설 NPM 서버에 게시한다.
  *
  * @param dependencies
  * @constructor
@@ -71,16 +87,21 @@ function _publish(dependencies = {}){
 
     _.map(dependencies, (v, k) => {
 
-        const versions = eval(exec(`npm view ${k} versions --registry ${publicUri}`, {silent:true}).stdout);
+        const versions = eval(exec(`npm view ${k} versions --registry ${this.npmjsUrl}`, {silent:true}).stdout);
         let resolved = v.resolved || v._resolved;
+
+        const packagePath = `${this.storage}/${k}`;
+
+        // `storage` 디렉토리의 기존 패키지 폴더를 삭제한다(파일 존재 여부에 상관없이, 무조건 재설치 되도록 강제시킨다)
+        if (fs.existsSync(packagePath) && this.force) rm('-rf', packagePath);
 
         _.forEach(versions, version => {
 
             if (resolved.indexOf('git') === -1){
-                resolved = `${publicUri}/${k}/-/${k}-${version}.tgz`;
+                resolved = `${this.npmjsUrl}/${k}/-/${k}-${version}.tgz`;
             }
 
-            const command = `npm publish ${resolved} --registry ${privateUri}`;
+            const command = `npm publish ${resolved} --registry ${this.proxy}`;
 
             console.log(command);
 
