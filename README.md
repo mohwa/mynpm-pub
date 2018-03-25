@@ -1,14 +1,14 @@
 
-# makeup-private-npm-server
+# my-npm
 
-`makeup-private-npm-server` is a library that installs all dependent packages required by the project on the [verdaccio](http://www.verdaccio.org/docs/en/configuration.html) private NPM server.
+`my-npm` is a library that installs all dependent packages required by the project on the [verdaccio](http://www.verdaccio.org/docs/en/configuration.html) private NPM server.
 
 ## Install
 
 > `verdaccio` is installed in global location when is this package install.
 
 ```bash
-npm i -g makeup-private-npm-server
+npm i -g my-npm
 ```
 
 ## `verdaccio` configuration
