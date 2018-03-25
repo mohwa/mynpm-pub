@@ -24,6 +24,9 @@ storage: ./storage
 
 # publish The registry url
 uplinks:
+  # **************************************************
+  # You must have npmjs.url and mynpm.url attributes.
+  # **************************************************
   npmjs:
     # public server uri
     url: https://registry.npmjs.org
@@ -72,6 +75,15 @@ Optional arguments:
                         Force the installation of the package.
 ```
 
+## ClI Example
+
+```
+# default
+mynpm --config /Users/sgjeon/.config/verdaccio/config.yaml
+
+# publish to force
+mynpm --config /Users/sgjeon/.config/verdaccio/config.yaml --force
+```
 
 
 
