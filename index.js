@@ -21,7 +21,7 @@ class MyNPM{
     } = {}){
         this.configPath = config;
         this.storage = '';
-        this.upLinkUrl = '';
+        this.npmjsUrl = '';
         this.proxy = '';
         this.force = force;
     }
@@ -53,7 +53,7 @@ class MyNPM{
             log.fatal('not found `uplinks.mynpm.url` property');
         }
 
-        this.upLinkUrl = config.uplinks.npmjs.url;
+        this.npmjsUrl = config.uplinks.npmjs.url;
         this.proxy = config.uplinks.mynpm.url;
 
         if (_.isEmpty(this.storage)) log.fatal('not found storage property');
@@ -100,7 +100,7 @@ function _publish(dependencies = {}){
 
     _.map(dependencies, (v, k) => {
 
-        const versions = eval(exec(`npm view ${k} versions --registry ${this.upLinkUrl}`, {silent:true}).stdout);
+        const versions = eval(exec(`npm view ${k} versions --registry ${this.npmjsUrl}`, {silent:true}).stdout);
         let resolved = v.resolved || v._resolved;
 
         const packagePath = `${this.storage}/${k}`;
@@ -111,7 +111,7 @@ function _publish(dependencies = {}){
         _.forEach(versions, version => {
 
             if (resolved.indexOf('git') === -1){
-                resolved = `${this.upLinkUrl}/${k}/-/${k}-${version}.tgz`;
+                resolved = `${this.npmjsUrl}/${k}/-/${k}-${version}.tgz`;
             }
 
             const command = `npm publish ${resolved} --registry ${this.proxy}`;
