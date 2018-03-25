@@ -20,13 +20,14 @@
     "lodash": "^4.14.1",
     "yargs": "^11.0.0",
     "js-yaml": "^3.11.0",
-    "argparse": "^1.0.10"
+    "argparse": "^1.0.10",
+    "chalk": "^2.3.2"
   },
   "bin": {
     "mynpm": "./bin/cli.js"
   },
   "scripts": {
-    "preinstall": "./scripts/install.js"
+    "postinstall": "./scripts/install.js"
   },
   "preferGlobal": true,
   "license": "MIT",

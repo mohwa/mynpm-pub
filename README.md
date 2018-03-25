@@ -25,43 +25,44 @@ storage: ./storage
 # publish The registry url
 uplinks:
   npmjs:
+    # public server uri
     url: https://registry.npmjs.org
+
+  mynpm:
+    # verdaccio server uri
+    url: http://127.0.0.1:4873
 
 # set proxy
 packages:
   '@*/*':
 	...
-    proxy: http://127.0.0.1:4873
+    proxy: mynpm
   '**':
     ...
-    proxy: http://127.0.0.1:4873
+    proxy: mynpm
 ...
-
-# server host and port
-listen:
-	- 127.0.0.1:4873
 ```
 
 ## Use with node.js
 
 ```
-const MPNS = require('makeup-private-npm-server');
+const MyNPM = require('my-npm');
 
-new MPNS({config: 'path/to/config.yaml', force: false}).start();
+new MyNPM({config: 'path/to/config.yaml', force: false}).start();
 ```
 
 ## Use with CLI
 
 ```
-mpns --config /Users/sgjeon/.config/verdaccio/config.yaml
+mynpm --config /Users/sgjeon/.config/verdaccio/config.yaml
 ```
 
 ### CLI Arguments
 
 ```
-usage: mpns [-h] [-v] [-c CONFIG] [-f FORCE]
+usage: mynpm [-h] [-v] [-c CONFIG] [-f FORCE]
 
-MPNS CLI
+mynpm cli example
 
 Optional arguments:
   ...

@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const log = require('../lib/log');
 
 const _ = require('lodash');
 const ArgumentParser = require('argparse').ArgumentParser;
@@ -33,6 +34,6 @@ const config = argv.c || argv.config;
 // 패키지 설치 강제 여부
 const force = (argv.f || argv.force) ? true : false;
 
-if (_.isEmpty(config)) throw new Error('not found config argument');
+if (_.isEmpty(config)) log.fatal('not found config argument');
 
 new (require('../index.js'))({config: config, force: force}).start();

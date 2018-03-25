@@ -5,6 +5,8 @@
 const fs = require('fs');
 const _ = require('lodash');
 const yaml = require('js-yaml');
+const process = require('process');
+const log = require('./lib/log');
 
 require('shelljs/global');
 
@@ -27,23 +29,34 @@ class MyNPM{
 
         const configPath = this.configPath;
 
-        if (_.isEmpty(configPath)) throw new Error('not found configPath property');
-        if (!fs.existsSync(configPath)) throw new Error('not exists configFile');
+        if (_.isEmpty(configPath)) log.fatal('not found configPath property');
+        if (!fs.existsSync(configPath)) log.fatal('not exists configFile');
 
         let config = yaml.safeLoadAll(fs.readFileSync(configPath, 'utf-8'));
 
-        if (!_.isArray(config)) throw new Error('not import configFile Info');
+        if (!_.isArray(config)) log.fatal('not import configFile Info');
 
         config = config[0];
 
         this.storage = config.storage;
+
+        if (
+        _.isEmpty(config.uplinks) ||
+        _.isEmpty(config.uplinks.npmjs) ||
+        _.isEmpty(config.uplinks.npmjs.url)){
+            log.fatal('not found `uplinks.npmjs.url` property');
+        }
+
+        if (
+        _.isEmpty(config.uplinks.mynpm) ||
+        _.isEmpty(config.uplinks.mynpm.url)){
+            log.fatal('not found `uplinks.mynpm.url` property');
+        }
+
         this.upLinkUrl = config.uplinks.npmjs.url;
         this.proxy = config.uplinks.mynpm.url;
 
-        if (_.isEmpty(this.storage)) throw new Error('not found storage property');
-        if (_.isEmpty(this.upLinkUrl)) throw new Error('not found `uplinks.npmjs.url` property');
-        if (_.isEmpty(this.proxy)) throw new Error('not found `uplinks.mynpm.url` property');
-
+        if (_.isEmpty(this.storage)) log.fatal('not found storage property');
 
         const npmList = JSON.parse(exec('npm ls --json', {silent:true}).stdout);
 
