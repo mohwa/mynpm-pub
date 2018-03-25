@@ -14,7 +14,7 @@ const packageConfig = JSON.parse(fs.readFileSync(path.join(__dirname, '../packag
 const cliParser = new ArgumentParser({
     version: packageConfig.version,
     addHelp:true,
-    description: 'MPNS CLI'
+    description: 'mynpm cli example'
 });
 
 cliParser.addArgument([ '-c', '--config' ], {

@@ -1,7 +1,7 @@
 {
-  "name": "makeup-private-npm-server",
+  "name": "my-npm",
   "version": "0.0.8",
-  "description": "makeup-private-npm-server",
+  "description": "my-npm",
   "keywords": [
     "private",
     "npm",
@@ -23,7 +23,7 @@
     "argparse": "^1.0.10"
   },
   "bin": {
-    "mpns": "./bin/cli.js"
+    "mynpm": "./bin/cli.js"
   },
   "scripts": {
     "preinstall": "./scripts/install.js"

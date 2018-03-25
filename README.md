@@ -22,7 +22,7 @@ npm i -g makeup-private-npm-server
 storage: ./storage
 ...
 
-# download server
+# publish The registry url
 uplinks:
   npmjs:
     url: https://registry.npmjs.org

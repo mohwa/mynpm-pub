@@ -11,7 +11,7 @@ require('shelljs/global');
 /**
  * MPNS 클래스
  */
-class MPNS{
+class MyNPM{
 
     constructor({
         config = '',
@@ -19,7 +19,7 @@ class MPNS{
     } = {}){
         this.configPath = config;
         this.storage = '';
-        this.npmjsUrl = '';
+        this.upLinkUrl = '';
         this.proxy = '';
         this.force = force;
     }
@@ -37,12 +37,12 @@ class MPNS{
         config = config[0];
 
         this.storage = config.storage;
-        this.npmjsUrl = config.uplinks.npmjs.url;
-        this.proxy = config.packages['**'].proxy;
+        this.upLinkUrl = config.uplinks.npmjs.url;
+        this.proxy = config.uplinks.mynpm.url;
 
         if (_.isEmpty(this.storage)) throw new Error('not found storage property');
-        if (_.isEmpty(this.npmjsUrl)) throw new Error('not found npmjs.url property');
-        if (_.isEmpty(this.proxy)) throw new Error('not found proxy property');
+        if (_.isEmpty(this.upLinkUrl)) throw new Error('not found `uplinks.npmjs.url` property');
+        if (_.isEmpty(this.proxy)) throw new Error('not found `uplinks.mynpm.url` property');
 
 
         const npmList = JSON.parse(exec('npm ls --json', {silent:true}).stdout);
@@ -87,7 +87,7 @@ function _publish(dependencies = {}){
 
     _.map(dependencies, (v, k) => {
 
-        const versions = eval(exec(`npm view ${k} versions --registry ${this.npmjsUrl}`, {silent:true}).stdout);
+        const versions = eval(exec(`npm view ${k} versions --registry ${this.upLinkUrl}`, {silent:true}).stdout);
         let resolved = v.resolved || v._resolved;
 
         const packagePath = `${this.storage}/${k}`;
@@ -98,7 +98,7 @@ function _publish(dependencies = {}){
         _.forEach(versions, version => {
 
             if (resolved.indexOf('git') === -1){
-                resolved = `${this.npmjsUrl}/${k}/-/${k}-${version}.tgz`;
+                resolved = `${this.upLinkUrl}/${k}/-/${k}-${version}.tgz`;
             }
 
             const command = `npm publish ${resolved} --registry ${this.proxy}`;
@@ -110,4 +110,4 @@ function _publish(dependencies = {}){
     });
 }
 
-module.exports = MPNS;
+module.exports = MyNPM;
