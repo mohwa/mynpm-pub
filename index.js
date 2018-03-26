@@ -106,6 +106,7 @@ function _publish(dependencies = {}){
 
         const versions = eval(exec(`npm view ${k} versions --registry ${this.npmjsUrl}`, {silent:true}).stdout);
         let resolved = v.resolved || v._resolved;
+        let _k = '';
 
         const packagePath = path.join(this.storage, k);
 
@@ -118,7 +119,10 @@ function _publish(dependencies = {}){
                 resolved = `${this.npmjsUrl}/${k}/-/${k}-${version}.tgz`;
             }
 
-            const tarballPath = path.join(packagePath, `${k}-${version}.tgz`);
+            // @scope 패키지일 경우
+            if (_isScopePackage(k)) _k = k.split('/')[1];
+
+            const tarballPath = path.join(packagePath, `${_k}-${version}.tgz`);
 
             // tarball 파일이 존재할 경우...
             if (fs.existsSync(tarballPath)){
@@ -133,6 +137,17 @@ function _publish(dependencies = {}){
             exec(command);
         });
     });
+}
+
+/**
+ * @scope 패키지 여부를 반환한다.
+ *
+ * @param v
+ * @returns {boolean}
+ * @private
+ */
+function _isScopePackage(v = ''){
+    return /^\@/.test(v);
 }
 
 module.exports = MyNPMPub;
