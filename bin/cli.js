@@ -7,9 +7,6 @@ const log = require('../lib/log');
 const _ = require('lodash');
 const ArgumentParser = require('argparse').ArgumentParser;
 
-const yargs = require('yargs');
-const argv = yargs.argv;
-
 const packageConfig = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json'), 'utf-8'));
 
 // http://nodeca.github.io/argparse/#HelpFormatter.prototype.addArgument
@@ -32,9 +29,9 @@ cliParser.addArgument([ '-f', '--force' ], {
 const args = cliParser.parseArgs();
 
 // verdaccio config.yaml file path
-const config = argv.c || argv.config;
+const config = args.c || args.config;
 // 패키지 설치 강제 여부
-const force = argv.f || argv.force;
+const force = args.f || args.force;
 
 if (_.isEmpty(config)) log.fatal('not found config argument');
 
