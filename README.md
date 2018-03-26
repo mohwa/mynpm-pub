@@ -82,7 +82,7 @@ Optional arguments:
 mynpm-pub --config /path/to/config.yaml
 
 # publish to force
-mynpm-pub --config /path/to/config.yaml --force
+mynpm-pub --config /path/to/config.yaml --force true
 ```
 
 

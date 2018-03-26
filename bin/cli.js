@@ -12,10 +12,11 @@ const argv = yargs.argv;
 
 const packageConfig = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json'), 'utf-8'));
 
+// http://nodeca.github.io/argparse/#HelpFormatter.prototype.addArgument
 const cliParser = new ArgumentParser({
     version: packageConfig.version,
     addHelp:true,
-    description: 'my-npm-server cli example'
+    description: 'my-npm-pub cli example'
 });
 
 cliParser.addArgument([ '-c', '--config' ], {
@@ -24,6 +25,7 @@ cliParser.addArgument([ '-c', '--config' ], {
 
 cliParser.addArgument([ '-f', '--force' ], {
     required: false,
+    defaultValue: false,
     help: 'Force the installation of the package.'
 });
 
