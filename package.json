@@ -1,7 +1,7 @@
 {
-  "name": "my-npm",
+  "name": "mynpm-pub",
   "version": "0.0.8",
-  "description": "my-npm",
+  "description": "my-npm-server",
   "keywords": [
     "private",
     "npm",
@@ -24,7 +24,7 @@
     "chalk": "^2.3.2"
   },
   "bin": {
-    "mynpm": "./bin/cli.js"
+    "mynpm-pub": "./bin/cli.js"
   },
   "scripts": {
     "postinstall": "./scripts/install.js"

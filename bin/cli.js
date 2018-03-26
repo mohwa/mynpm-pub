@@ -15,7 +15,7 @@ const packageConfig = JSON.parse(fs.readFileSync(path.join(__dirname, '../packag
 const cliParser = new ArgumentParser({
     version: packageConfig.version,
     addHelp:true,
-    description: 'mynpm cli example'
+    description: 'my-npm-server cli example'
 });
 
 cliParser.addArgument([ '-c', '--config' ], {

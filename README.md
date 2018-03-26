@@ -1,14 +1,14 @@
 
-# my-npm
+# mynpm-pub
 
-`my-npm` is a library that installs all dependent packages required by the project on the [verdaccio](http://www.verdaccio.org/docs/en/configuration.html) private NPM server.
+`mynpm-pub` is a library that installs all dependent packages required by the project on the [verdaccio](http://www.verdaccio.org/docs/en/configuration.html) private NPM server.
 
 ## Install
 
 > `verdaccio` is installed in global location when is this package install.
 
 ```bash
-npm i -g my-npm
+npm i -g mynpm-pub
 ```
 
 ## `verdaccio` configuration
@@ -22,16 +22,16 @@ npm i -g my-npm
 storage: ./storage
 ...
 
-# publish The registry url
+# publish the registry url
 uplinks:
   # **************************************************
-  # You must have npmjs.url and mynpm.url attributes.
+  # You must have npmjs.url and mynpmpub.url attributes.
   # **************************************************
   npmjs:
     # public server uri
     url: https://registry.npmjs.org
 
-  mynpm:
+  mynpmpub:
     # verdaccio server uri
     url: http://127.0.0.1:4873
 
@@ -39,31 +39,31 @@ uplinks:
 packages:
   '@*/*':
 	...
-    proxy: mynpm
+    proxy: mynpmpub
   '**':
     ...
-    proxy: mynpm
+    proxy: mynpmpub
 ...
 ```
 
 ## Use with node.js
 
 ```
-const MyNPM = require('my-npm');
+const MyNPMPub = require('mynpm-pub');
 
-new MyNPM({config: 'path/to/config.yaml', force: false}).start();
+new MyNPMPub({config: 'path/to/config.yaml', force: false}).start();
 ```
 
 ## Use with CLI
 
 ```
-mynpm --config /Users/sgjeon/.config/verdaccio/config.yaml
+mynpm-pub --config /path/to/config.yaml
 ```
 
 ### CLI Arguments
 
 ```
-usage: mynpm [-h] [-v] [-c CONFIG] [-f FORCE]
+usage: mynpm-pub [-h] [-v] [-c CONFIG] [-f FORCE]
 
 mynpm cli example
 
@@ -79,10 +79,10 @@ Optional arguments:
 
 ```
 # default
-mynpm --config /Users/sgjeon/.config/verdaccio/config.yaml
+mynpm-pub --config /path/to/config.yaml
 
 # publish to force
-mynpm --config /Users/sgjeon/.config/verdaccio/config.yaml --force
+mynpm-pub --config /path/to/config.yaml --force
 ```
 
 

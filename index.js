@@ -11,9 +11,9 @@ const log = require('./lib/log');
 require('shelljs/global');
 
 /**
- * MPNS 클래스
+ * MyNPMPub 클래스
  */
-class MyNPM{
+class MyNPMPub{
 
     constructor({
         config = '',
@@ -48,13 +48,13 @@ class MyNPM{
         }
 
         if (
-        _.isEmpty(config.uplinks.mynpm) ||
-        _.isEmpty(config.uplinks.mynpm.url)){
-            log.fatal('not found `uplinks.mynpm.url` property');
+        _.isEmpty(config.uplinks.mynpmpub) ||
+        _.isEmpty(config.uplinks.mynpmpub.url)){
+            log.fatal('not found `uplinks.mynpmpub.url` property');
         }
 
         this.npmjsUrl = config.uplinks.npmjs.url;
-        this.proxy = config.uplinks.mynpm.url;
+        this.proxy = config.uplinks.mynpmpub.url;
 
         if (_.isEmpty(this.storage)) log.fatal('not found storage property');
 
@@ -123,4 +123,4 @@ function _publish(dependencies = {}){
     });
 }
 
-module.exports = MyNPM;
+module.exports = MyNPMPub;
