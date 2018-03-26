@@ -31,12 +31,12 @@ class MyNPMPub{
 
         const configPath = this.configPath;
 
-        if (_.isEmpty(configPath)) log.fatal('not found configPath property');
-        if (!fs.existsSync(configPath)) log.fatal('not exists configFile');
+        if (_.isEmpty(configPath)) log.fatal('not found config property.');
+        if (!fs.existsSync(configPath)) log.fatal('not exists config file.');
 
         let config = yaml.safeLoadAll(fs.readFileSync(configPath, 'utf-8'));
 
-        if (!_.isArray(config)) log.fatal('not import configFile Info');
+        if (!_.isArray(config)) log.fatal('not import configFile info.');
 
         config = config[0];
 
@@ -46,21 +46,23 @@ class MyNPMPub{
         _.isEmpty(config.uplinks) ||
         _.isEmpty(config.uplinks.npmjs) ||
         _.isEmpty(config.uplinks.npmjs.url)){
-            log.fatal('not found `uplinks.npmjs.url` property');
+            log.fatal('not found `uplinks.npmjs.url` property.');
         }
 
         if (
         _.isEmpty(config.uplinks.mynpmpub) ||
         _.isEmpty(config.uplinks.mynpmpub.url)){
-            log.fatal('not found `uplinks.mynpmpub.url` property');
+            log.fatal('not found `uplinks.mynpmpub.url` property.');
         }
 
         this.npmjsUrl = config.uplinks.npmjs.url;
         this.proxy = config.uplinks.mynpmpub.url;
 
-        if (_.isEmpty(this.storage)) log.fatal('not found storage property');
+        if (this.force && _.isEmpty(this.storage)) log.fatal('not found storage property.');
 
         const npmList = JSON.parse(exec('npm ls --json', {silent:true}).stdout);
+
+        if (!_.size(npmList.dependencies)) log.log('Not exists dependencies.');
 
         _publish.call(this, _createDependencyList(npmList.dependencies));
     }
@@ -118,7 +120,7 @@ function _publish(dependencies = {}){
 
             const command = `npm publish ${resolved} --registry ${this.proxy}`;
 
-            console.log(command);
+            log.log(command, 'yellow');
 
             exec(command);
         });
