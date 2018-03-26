@@ -34,7 +34,7 @@ const args = cliParser.parseArgs();
 // verdaccio config.yaml file path
 const config = argv.c || argv.config;
 // 패키지 설치 강제 여부
-const force = (argv.f || argv.force) ? true : false;
+const force = argv.f || argv.force;
 
 if (_.isEmpty(config)) log.fatal('not found config argument');
 
