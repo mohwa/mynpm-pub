@@ -118,6 +118,14 @@ function _publish(dependencies = {}){
                 resolved = `${this.npmjsUrl}/${k}/-/${k}-${version}.tgz`;
             }
 
+            const tarballPath = path.join(packagePath, `${k}-${version}.tgz`);
+
+            // tarball 파일이 존재할 경우...
+            if (fs.existsSync(tarballPath)){
+                log.log('Cannot publish over existing version.');
+                return;
+            }
+
             const command = `npm publish ${resolved} --registry ${this.proxy}`;
 
             log.log(command, 'yellow');
