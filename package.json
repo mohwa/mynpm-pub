@@ -26,9 +26,6 @@
   "bin": {
     "mynpm-pub": "./bin/cli.js"
   },
-  "scripts": {
-    "postinstall": "./scripts/install.js"
-  },
   "preferGlobal": true,
   "license": "MIT",
   "engines": {

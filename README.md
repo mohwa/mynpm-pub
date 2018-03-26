@@ -5,9 +5,11 @@
 
 ## Install
 
-> `verdaccio` is installed in global location when is this package install.
-
 ```bash
+# install verdaccio
+npm i -g verdaccio
+
+# install mynpm-pub
 npm i -g mynpm-pub
 ```
 
