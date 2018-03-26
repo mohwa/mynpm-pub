@@ -65,7 +65,7 @@ mynpm-pub --config /path/to/config.yaml
 ```
 usage: mynpm-pub [-h] [-v] [-c CONFIG] [-f FORCE]
 
-mynpm cli example
+mynpm-pub cli example
 
 Optional arguments:
   ...
