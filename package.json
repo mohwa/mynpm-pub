@@ -1,6 +1,6 @@
 {
   "name": "mynpm-pub",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "my-npm-server",
   "keywords": [
     "private",
@@ -26,7 +26,6 @@
   "bin": {
     "mynpm-pub": "./bin/cli.js"
   },
-  "preferGlobal": true,
   "license": "MIT",
   "engines": {
     "node": ">=8.x"

@@ -3,21 +3,18 @@
 
 `mynpm-pub` is a library that installs all dependent packages required by the project on the [verdaccio](http://www.verdaccio.org/docs/en/configuration.html) private NPM server.
 
-## Install
 
-```bash
-# install verdaccio
+## Install `verdaccio`
+
+```
 npm i -g verdaccio
-
-# install mynpm-pub
-npm i -g mynpm-pub
 ```
 
 ## `verdaccio` configuration
 
 [What is Verdaccio?](http://www.verdaccio.org/docs/en/what-is-verdaccio.html) / [verdaccio configuration](http://www.verdaccio.org/docs/en/configuration.html)
 
-## Required configuration
+## Required `verdaccio` configuration
 
 ```
 # package storage
@@ -50,6 +47,13 @@ packages:
 
 ## Use with node.js
 
+Install package:
+
+```
+npm i mynpm-pub
+```
+
+Example:
 ```
 const MyNPMPub = require('mynpm-pub');
 
@@ -57,6 +61,14 @@ new MyNPMPub({config: 'path/to/config.yaml', force: false}).start();
 ```
 
 ## Use with CLI
+
+Install package on global location:
+
+```
+npm i -g mynpm-pub
+```
+
+Default command:
 
 ```
 mynpm-pub --config /path/to/config.yaml
