@@ -17,8 +17,8 @@ npm i -g verdaccio
 ## Required `verdaccio` configuration
 
 ```
-# package storage
-storage: ./storage
+# package storage(absolute path)
+storage: /path/to/storage
 ...
 
 # publish the registry url

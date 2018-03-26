@@ -3,6 +3,8 @@
  */
 
 const fs = require('fs');
+const path = require('path');
+
 const _ = require('lodash');
 const yaml = require('js-yaml');
 const process = require('process');
@@ -103,7 +105,7 @@ function _publish(dependencies = {}){
         const versions = eval(exec(`npm view ${k} versions --registry ${this.npmjsUrl}`, {silent:true}).stdout);
         let resolved = v.resolved || v._resolved;
 
-        const packagePath = `${this.storage}/${k}`;
+        const packagePath = path.join(this.storage, k);
 
         // `storage` 디렉토리의 기존 패키지 폴더를 삭제한다(파일 존재 여부에 상관없이, 무조건 재설치 되도록 강제시킨다)
         if (fs.existsSync(packagePath) && this.force) rm('-rf', packagePath);
