@@ -27,7 +27,9 @@ uplinks:
     # public server url
     url: https://registry.npmjs.org
   # **************************************************
+  # **************************************************
   # You must have mynpmpub.url attributes.
+  # **************************************************
   # **************************************************
   mynpmpub:
     # private npm server url
