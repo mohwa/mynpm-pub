@@ -12,6 +12,8 @@ const log = require('./lib/log');
 
 require('shelljs/global');
 
+const NPMJS_URL = 'https://registry.npmjs.org';
+
 /**
  * MyNPMPub 클래스
  */
@@ -23,8 +25,7 @@ class MyNPMPub{
     } = {}){
         this.configPath = config;
         this.storage = '';
-        this.npmjsUrl = '';
-        this.proxy = '';
+        this.registryUrl = '';
         this.force = force;
     }
     start(){
@@ -43,20 +44,12 @@ class MyNPMPub{
         this.storage = config.storage;
 
         if (
-        _.isEmpty(config.uplinks) ||
-        _.isEmpty(config.uplinks.npmjs) ||
-        _.isEmpty(config.uplinks.npmjs.url)){
-            log.fatal('not found `uplinks.npmjs.url` property.');
-        }
-
-        if (
         _.isEmpty(config.uplinks.mynpmpub) ||
         _.isEmpty(config.uplinks.mynpmpub.url)){
             log.fatal('not found `uplinks.mynpmpub.url` property.');
         }
 
-        this.npmjsUrl = config.uplinks.npmjs.url;
-        this.proxy = config.uplinks.mynpmpub.url;
+        this.registryUrl = config.uplinks.mynpmpub.url;
 
         if (this.force && _.isEmpty(this.storage)) log.fatal('not found storage property.');
 
@@ -104,7 +97,7 @@ function _publish(dependencies = {}){
 
     _.map(dependencies, (v, k) => {
 
-        const versions = eval(exec(`npm view ${k} versions --registry ${this.npmjsUrl}`, {silent:true}).stdout);
+        const versions = eval(exec(`npm view ${k} versions --registry ${NPMJS_URL}`, {silent:true}).stdout);
         let resolved = v.resolved || v._resolved;
         let _k = k;
 
@@ -116,7 +109,7 @@ function _publish(dependencies = {}){
         _.forEach(versions, version => {
 
             if (resolved.indexOf('git') === -1){
-                resolved = `${this.npmjsUrl}/${k}/-/${k}-${version}.tgz`;
+                resolved = `${NPMJS_URL}/${k}/-/${k}-${version}.tgz`;
             }
 
             // @scope 패키지일 경우
@@ -124,7 +117,8 @@ function _publish(dependencies = {}){
 
             const tarballPath = path.join(packagePath, `${_k}-${version}.tgz`);
 
-            const command = `npm publish ${resolved} --registry ${this.proxy}`;
+            const command = `npm publish ${resolved} --registry ${this.registryUrl}`;
+
             log.log(command, 'yellow');
 
             // tarball 파일이 존재할 경우...

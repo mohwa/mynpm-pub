@@ -23,15 +23,14 @@ storage: /path/to/storage
 
 # publish the registry url
 uplinks:
-  # **************************************************
-  # You must have npmjs.url and mynpmpub.url attributes.
-  # **************************************************
   npmjs:
-    # public server uri
+    # public server url
     url: https://registry.npmjs.org
-
+  # **************************************************
+  # You must have mynpmpub.url attributes.
+  # **************************************************
   mynpmpub:
-    # verdaccio server uri
+    # private npm server url
     url: http://127.0.0.1:4873
 
 # set proxy

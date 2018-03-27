@@ -1,6 +1,6 @@
 {
   "name": "mynpm-pub",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "my-npm-pub",
   "keywords": [
     "private",
@@ -8,7 +8,7 @@
     "server",
     "verdaccio"
   ],
-  "homepage": "https://github.com/mohwa/makeup-private-npm-server",
+  "homepage": "https://github.com/mohwa/mynpm-pub",
   "author": {
     "name": "mohwa",
     "email": "yanione2@gmail.com",
