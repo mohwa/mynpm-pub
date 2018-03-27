@@ -46,6 +46,14 @@ packages:
 ...
 ```
 
+## You Must make up dependency tree with `npm i` command.
+
+```
+cd path/to/projectPath
+
+npm i
+```
+
 ## Use with node.js
 
 Install package:
