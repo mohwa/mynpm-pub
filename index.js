@@ -7,12 +7,14 @@ const path = require('path');
 
 const _ = require('lodash');
 const yaml = require('js-yaml');
-const process = require('process');
+//const process = require('process');
+const chalk = require('chalk');
 const log = require('./lib/log');
+const { execSync, spawnSync } = require('child_process');
 
 require('shelljs/global');
 
-const NPMJS_URL = 'https://registry.npmjs.org';
+const NPMJS_URL = 'http://registry.npmjs.org';
 
 /**
  * MyNPMPub 클래스
@@ -53,6 +55,12 @@ class MyNPMPub{
 
         if (this.force && _.isEmpty(this.storage)) log.fatal('not found storage property.');
 
+        let command = `npm i --registry ${NPMJS_URL}`;
+
+        console.log(`command: ${chalk.yellow(command)}`);
+
+        execSync(command, {stdio: 'inherit', shell: true});
+
         const npmList = JSON.parse(exec('npm ls --json', {silent:true}).stdout);
 
         if (!_.size(npmList.dependencies)) log.log('Not exists dependencies.');
@@ -81,7 +89,18 @@ function _createDependencyList(dependencies = {}, _dependencies = {}){
             _createDependencyList(v.dependencies, _dependencies);
         }
 
-        if (v.resolved || v._resolved) _dependencies[k] = v;
+        const version = v.version;
+
+        if (version){
+
+            let _dependencie = _.isArray(_dependencies[k]) ? _dependencies[k] : [];
+
+            if (_dependencie.indexOf(version) === -1){
+                _dependencie.push(version);
+            }
+
+            _dependencies[k] = _dependencie;
+        }
     });
 
     return _dependencies;
@@ -97,8 +116,9 @@ function _publish(dependencies = {}){
 
     _.map(dependencies, (v, k) => {
 
-        const versions = eval(exec(`npm view ${k} versions --registry ${NPMJS_URL}`, {silent:true}).stdout);
-        let resolved = v.resolved || v._resolved;
+        // 버전 리스트
+        let versions = v;
+        // 패키지명
         let _k = k;
 
         const packagePath = path.join(this.storage, k);
@@ -106,26 +126,24 @@ function _publish(dependencies = {}){
         // `storage` 디렉토리의 기존 패키지 폴더를 삭제한다(파일 존재 여부에 상관없이, 무조건 재설치 되도록 강제시킨다)
         if (fs.existsSync(packagePath) && this.force) rm('-rf', packagePath);
 
-        _.forEach(versions, version => {
+        _.forEach(versions, v => {
 
-            if (resolved.indexOf('git') === -1){
-                resolved = `${NPMJS_URL}/${k}/-/${k}-${version}.tgz`;
-            }
+            let resolved = `${NPMJS_URL}/${k}/-/${k}-${v}.tgz`;
 
             // @scope 패키지일 경우
             if (_isScopePackage(k)) _k = k.split('/')[1];
 
-            const tarballPath = path.join(packagePath, `${_k}-${version}.tgz`);
+            const tarballPath = path.join(packagePath, `${_k}-${v}.tgz`);
+
+            // tarball 파일이 존재할 경우...
+            if (fs.existsSync(tarballPath)){
+                log.log(`Cannot publish over existing version. - ${k}(${v})`, 'gray');
+                return;
+            }
 
             const command = `npm publish ${resolved} --registry ${this.registryUrl}`;
 
             log.log(command, 'yellow');
-
-            // tarball 파일이 존재할 경우...
-            if (fs.existsSync(tarballPath)){
-                log.log(`Cannot publish over existing version. - ${k}(${version})`, 'gray');
-                return;
-            }
 
             exec(command);
         });
