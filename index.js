@@ -7,7 +7,6 @@ const path = require('path');
 
 const _ = require('lodash');
 const yaml = require('js-yaml');
-//const process = require('process');
 const chalk = require('chalk');
 const log = require('./lib/log');
 const { execSync, spawnSync } = require('child_process');
@@ -145,7 +144,7 @@ function _publish(dependencies = {}){
 
             log.log(command, 'yellow');
 
-            exec(command);
+            execSync(command, {stdio: 'inherit', shell: true});
         });
     });
 }
