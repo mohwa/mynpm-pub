@@ -20,6 +20,12 @@ cliParser.addArgument([ '-c', '--config' ], {
     help: 'verdaccio configuration file path'
 });
 
+cliParser.addArgument([ '-pkgs', '--packages' ], {
+    required: false,
+    nargs: '+',
+    help: 'installation each packages.'
+});
+
 cliParser.addArgument([ '-f', '--force' ], {
     required: false,
     defaultValue: false,
@@ -30,9 +36,13 @@ const args = cliParser.parseArgs();
 
 // verdaccio config.yaml file path
 const config = args.c || args.config;
+
+// 개별 패키지명
+const packages = args.pkgs || args.packages;
+
 // 패키지 설치 강제 여부
 const force = args.f || args.force;
 
 if (_.isEmpty(config)) log.fatal('not found config argument');
 
-new (require('../index.js'))({config: config, force: force}).start();
+new (require('../index.js'))({config: config, packages: packages, force: force}).publish();

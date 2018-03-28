@@ -1,18 +1,15 @@
-/**
- * Created by UI/UX Team on 2018. 3. 21..
- */
 
 const fs = require('fs');
 const path = require('path');
 
+const fse = require('fs-extra');
 const _ = require('lodash');
 const yaml = require('js-yaml');
 const chalk = require('chalk');
 const log = require('./lib/log');
 const { execSync, spawnSync } = require('child_process');
 
-require('shelljs/global');
-
+// 공용 npm registry url
 const NPMJS_URL = 'http://registry.npmjs.org';
 
 /**
@@ -22,14 +19,26 @@ class MyNPMPub{
 
     constructor({
         config = '',
+        packages = [],
         force = false
     } = {}){
+
+        // config.yaml file path
         this.configPath = config;
-        this.storage = '';
-        this.registryUrl = '';
+        // 개별 패키지명
+        this.packages = packages;
+
+        // 개별 패키지명 사용 여부
+        this.isPackages = !_.isEmpty(this.packages) ? true : false;
+        // force 설치 여부
         this.force = force;
+
+        // config.yaml 파일에 정의된 storage path
+        this.storage = '';
+        // npm registry url
+        this.registryUrl = '';
     }
-    start(){
+    publish(){
 
         const configPath = this.configPath;
 
@@ -54,17 +63,27 @@ class MyNPMPub{
 
         if (this.force && _.isEmpty(this.storage)) log.fatal('not found storage property.');
 
-        let command = `npm i --registry ${NPMJS_URL}`;
+        const packageRootPath = _.trim(spawnSync('npm', ['root'], {shell: true, encoding: 'utf8'}).stdout);
+        const srcPath = path.join(packageRootPath);
+        const destPath = path.join(packageRootPath.replace('node_modules', ''), 'node_modules_bak');
 
-        console.log(`command: ${chalk.yellow(command)}`);
+        // 전체 또는 개별 패키지들을 설치한다.
+        _packageInstall.call(this, srcPath, destPath);
 
-        execSync(command, {stdio: 'inherit', shell: true});
-
-        const npmList = JSON.parse(exec('npm ls --json', {silent:true}).stdout);
+        const npmList = JSON.parse(spawnSync('npm', ['ls', '--json'], {shell: true, encoding: 'utf8'}).stdout);
 
         if (!_.size(npmList.dependencies)) log.log('Not exists dependencies.');
 
         _publish.call(this, _createDependencyList(npmList.dependencies));
+
+        // 백업했던 node_modules 폴더를 복구시킨다.
+        if (this.isPackages){
+
+            log.log('Restore the node_modules folder. ...', 'green');
+
+            fse.removeSync(srcPath);
+            fse.moveSync(destPath, srcPath);
+        }
     }
 }
 
@@ -123,7 +142,7 @@ function _publish(dependencies = {}){
         const packagePath = path.join(this.storage, k);
 
         // `storage` 디렉토리의 기존 패키지 폴더를 삭제한다(파일 존재 여부에 상관없이, 무조건 재설치 되도록 강제시킨다)
-        if (fs.existsSync(packagePath) && this.force) rm('-rf', packagePath);
+        if (fs.existsSync(packagePath) && this.force) fse.removeSync('-rf', packagePath);
 
         _.forEach(versions, v => {
 
@@ -147,6 +166,38 @@ function _publish(dependencies = {}){
             execSync(command, {stdio: 'inherit', shell: true});
         });
     });
+}
+
+/**
+ *
+ * @param srcPath
+ * @param destPath
+ * @private
+ */
+function _packageInstall(srcPath = '', destPath = ''){
+
+    const args = ['i'];
+
+    // 개별 패키지명이 있는 경우
+    if (this.isPackages){
+
+        if (!fs.existsSync(srcPath)){
+            log.fatal('not exists node_modules path.(run command `npm i`)');
+        }
+
+        log.log('Move the node_modules folder. ...', 'yellow');
+
+        fse.moveSync(srcPath, destPath);
+
+        args.push(this.packages.join(' '));
+        args.push('--no-save');
+    }
+
+    args.push(`--registry ${NPMJS_URL}`);
+
+    console.log(`command: ${chalk.yellow(`npm ${args.join(' ')}`)}`);
+
+    spawnSync('npm', args, {stdio: 'inherit', shell: true});
 }
 
 /**

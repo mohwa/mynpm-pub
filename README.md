@@ -86,14 +86,19 @@ mynpm-pub --config /path/to/config.yaml
 ### CLI Arguments
 
 ```
-usage: mynpm-pub [-h] [-v] [-c CONFIG] [-f FORCE]
+usage: mynpm-pub [-h] [-v] [-c CONFIG] [-pkgs PACKAGES [PACKAGES ...]]
+                 [-f FORCE]
 
-mynpm-pub cli example
+
+my-npm-pub cli example
 
 Optional arguments:
-  ...
+  -h, --help            Show this help message and exit.
+  -v, --version         Show program's version number and exit.
   -c CONFIG, --config CONFIG
                         verdaccio configuration file path
+  -pkgs PACKAGES [PACKAGES ...], --packages PACKAGES [PACKAGES ...]
+                        installation each packages.
   -f FORCE, --force FORCE
                         Force the installation of the package.
 ```
@@ -103,6 +108,9 @@ Optional arguments:
 ```
 # default
 mynpm-pub --config /path/to/config.yaml
+
+# publish to each packages
+mynpm-pub --config /path/to/config.yaml --packages [packageName]
 
 # publish to force
 mynpm-pub --config /path/to/config.yaml --force true
