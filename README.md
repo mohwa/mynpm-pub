@@ -66,7 +66,7 @@ Example:
 ```
 const MyNPMPub = require('mynpm-pub');
 
-new MyNPMPub({config: 'path/to/config.yaml', force: false, packages: 'test test1'}).publish();
+new MyNPMPub({config: 'path/to/config.yaml', force: false, packages: ['test', 'test1']}).publish();
 ```
 
 ## Use with CLI
