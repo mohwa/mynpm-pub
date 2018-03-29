@@ -2,11 +2,12 @@
 const fs = require('fs');
 const path = require('path');
 
-const fse = require('fs-extra');
 const _ = require('lodash');
+const fse = require('fs-extra');
 const yaml = require('js-yaml');
 const chalk = require('chalk');
 const log = require('./lib/log');
+
 const { execSync, spawnSync } = require('child_process');
 
 // 공용 npm registry url
@@ -49,6 +50,7 @@ class MyNPMPub{
 
         if (!_.isArray(config)) log.fatal('not import configFile info.');
 
+        // config.yaml to json
         config = config[0];
 
         this.storage = config.storage;
@@ -63,20 +65,23 @@ class MyNPMPub{
 
         if (this.force && _.isEmpty(this.storage)) log.fatal('not found storage property.');
 
+        // package.json 파일이 존재하는 경로
         const packageRootPath = _.trim(spawnSync('npm', ['root'], {shell: true, encoding: 'utf8'}).stdout);
-        const srcPath = path.join(packageRootPath);
-        const destPath = path.join(packageRootPath.replace('node_modules', ''), 'node_modules_bak');
+        const srcPath = path.join(packageRootPath); // path/to/node_modules
+        const destPath = path.join(packageRootPath.replace('node_modules', ''), 'node_modules_bak'); // path/to/node_modules_bak
 
         // 전체 또는 개별 패키지들을 설치한다.
         _packageInstall.call(this, srcPath, destPath);
 
+        // 의존성 트리 정보를 가져온다.
         const npmList = JSON.parse(spawnSync('npm', ['ls', '--json'], {shell: true, encoding: 'utf8'}).stdout);
 
         if (!_.size(npmList.dependencies)) log.log('Not exists dependencies.');
 
+        // 사설 서버에 의존성 패키지를 게시한다.
         _publish.call(this, _createDependencyList(npmList.dependencies));
 
-        // 백업했던 node_modules 폴더를 복구시킨다.
+        // 기존 node_modules 폴더를 복구시킨다.
         if (this.isPackages){
 
             log.log('Restore the node_modules folder. ...', 'green');
@@ -169,6 +174,8 @@ function _publish(dependencies = {}){
 }
 
 /**
+ *
+ * (전체 또는 개별) 패키지를 설치한다.
  *
  * @param srcPath
  * @param destPath

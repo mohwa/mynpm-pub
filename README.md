@@ -66,7 +66,7 @@ Example:
 ```
 const MyNPMPub = require('mynpm-pub');
 
-new MyNPMPub({config: 'path/to/config.yaml', force: false}).start();
+new MyNPMPub({config: 'path/to/config.yaml', force: false, packages: 'test test1'}).publish();
 ```
 
 ## Use with CLI
@@ -86,7 +86,7 @@ mynpm-pub --config /path/to/config.yaml
 ### CLI Arguments
 
 ```
-usage: mynpm-pub [-h] [-v] [-c CONFIG] [-pkgs PACKAGES [PACKAGES ...]]
+usage: mynpm-pub [-h] [-v] [-c CONFIG] [--packages PACKAGES [PACKAGES ...]]
                  [-f FORCE]
 
 
@@ -97,7 +97,7 @@ Optional arguments:
   -v, --version         Show program's version number and exit.
   -c CONFIG, --config CONFIG
                         verdaccio configuration file path
-  -pkgs PACKAGES [PACKAGES ...], --packages PACKAGES [PACKAGES ...]
+  --packages PACKAGES [PACKAGES ...]
                         installation each packages.
   -f FORCE, --force FORCE
                         Force the installation of the package.
@@ -110,7 +110,7 @@ Optional arguments:
 mynpm-pub --config /path/to/config.yaml
 
 # publish to each packages
-mynpm-pub --config /path/to/config.yaml --packages [packageName]
+mynpm-pub --config /path/to/config.yaml --packages test test1
 
 # publish to force
 mynpm-pub --config /path/to/config.yaml --force true

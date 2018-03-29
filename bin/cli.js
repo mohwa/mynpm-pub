@@ -16,17 +16,17 @@ const cliParser = new ArgumentParser({
     description: 'my-npm-pub cli example'
 });
 
-cliParser.addArgument([ '-c', '--config' ], {
-    help: 'verdaccio configuration file path'
+cliParser.addArgument(['-c', '--config'], {
+    help: 'Verdaccio configuration file path'
 });
 
-cliParser.addArgument([ '-pkgs', '--packages' ], {
+cliParser.addArgument(['--packages'], {
     required: false,
     nargs: '+',
-    help: 'installation each packages.'
+    help: 'Installed each packages.'
 });
 
-cliParser.addArgument([ '-f', '--force' ], {
+cliParser.addArgument(['-f', '--force'], {
     required: false,
     defaultValue: false,
     help: 'Force the installation of the package.'
@@ -38,11 +38,12 @@ const args = cliParser.parseArgs();
 const config = args.c || args.config;
 
 // 개별 패키지명
-const packages = args.pkgs || args.packages;
+const packages = args.packages;
 
 // 패키지 설치 강제 여부
 const force = args.f || args.force;
 
 if (_.isEmpty(config)) log.fatal('not found config argument');
 
+// publish 시작
 new (require('../index.js'))({config: config, packages: packages, force: force}).publish();
