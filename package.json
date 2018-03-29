@@ -11,8 +11,7 @@
   "homepage": "https://github.com/mohwa/mynpm-pub",
   "author": {
     "name": "mohwa",
-    "email": "yanione2@gmail.com",
-    "url": "http://bxuip.bwg.co.kr"
+    "email": "yanione2@gmail.com"
   },
   "main": "index.js",
   "dependencies": {
